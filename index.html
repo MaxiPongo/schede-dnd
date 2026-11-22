@@ -124,7 +124,8 @@ body.locked header.top,body.locked main,body.locked #res{display:none}
 <div class="row sp" style="margin-top:6px"><button type="button" class="btn lnk" id="areset">Password dimenticata?</button><button type="button" class="btn lnk" id="aswitch"></button></div>
 </div>
 <div class="wbtn" style="margin-top:8px"><button type="button" class="btn p" id="adone" hidden>Ho confermato l’email</button><button type="button" class="btn" id="aresend" hidden>Reinvia l’email di conferma</button><button type="button" class="btn" id="aout" hidden>Esci</button></div>
-<p class="small" id="amsg" role="alert" style="margin:12px 0 0"></p></section></div>
+<p class="small" id="amsg" role="alert" style="margin:12px 0 0"></p>
+<details style="margin-top:14px"><summary class="small mute" style="cursor:pointer">Diagnostica</summary><pre class="small mute" id="diag" style="white-space:pre-wrap;margin:8px 0 0;font-family:inherit"></pre></details></section></div>
 <header class="top"><div class="wrap"><div class="row sp">
 <div><div class="row"><h1 id="hname"></h1><button class="btn" id="edid" aria-label="Modifica il personaggio" title="Modifica il personaggio" style="height:32px;padding:0 10px">✎</button></div><div class="row"><span class="pill" id="hbadge"></span><span class="pill gold" id="oath" hidden></span><span class="mute small" id="hsub"></span></div></div>
 <div class="row">
@@ -300,7 +301,7 @@ function sp(p,v){var k=p.split("."),o=S;for(var i=0;i<k.length-1;i++)o=o[k[i]];o
 function d(x){return Math.floor(Math.random()*x)+1}
 
 function save(){dirty=true;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
-if(ref){$("sv").textContent=navigator.onLine?"Salvataggio…":"Offline: salvato sul dispositivo, si sincronizza al ritorno della rete";clearTimeout(tm);tm=setTimeout(function(){ref.set({json:JSON.stringify(S)}).then(function(){$("sv").textContent="✓ Salvato"}).catch(function(){$("sv").textContent="Salvato solo su questo dispositivo"})},700)}
+if(ref){lset(PK,"1");$("sv").textContent=navigator.onLine?"Salvataggio…":"Offline: salvato sul dispositivo, si sincronizza al ritorno della rete";clearTimeout(tm);tm=setTimeout(function(){ref.set({json:JSON.stringify(S)}).then(function(){ldel(PK);$("sv").textContent="✓ Salvato"}).catch(function(){$("sv").textContent="Salvato sul dispositivo, da sincronizzare"})},700)}
 else $("sv").textContent="Salvato su questo dispositivo"}
 
 function fill(r,t,v,det,fl,ch){r.textContent="";var a=document.createElement("div");a.className="t";a.textContent=t;var b=document.createElement("div");b.className="tot";b.textContent=v;var c=document.createElement("div");c.className="chips";(ch||[]).forEach(function(x){var s=document.createElement("span");s.className="chip"+(x.off?" off":"")+(x.hi?" hi":"");s.textContent=x.v;c.appendChild(s)});var e=document.createElement("small");e.className="det";e.textContent=det+(fl==="crit"?" · Critico!":fl==="fail"?" · Fallimento critico":"");r.append(a,b,c,e);r.classList.remove("pop","crit","fail");void r.offsetWidth;r.classList.add("pop");if(fl)r.classList.add(fl)}
@@ -472,13 +473,23 @@ if(!S.ok)$("idp").hidden=false;
 if(window.IntersectionObserver)new IntersectionObserver(function(en){vis=en[0].isIntersecting},{threshold:.2}).observe($("dicecard"));
 
 /* ponte verso Firebase: lo usa lo script di accesso qui sotto */
+var UK="dnd5e-campagna-uid",PK="dnd5e-campagna-pending";
+function lget(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function lset(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function ldel(k){try{localStorage.removeItem(k)}catch(e){}}
+function pushCloud(r){$("sv").textContent="Salvataggio…";return r.set({json:JSON.stringify(S)}).then(function(){ldel(PK);$("sv").textContent="✓ Salvato"}).catch(function(){$("sv").textContent="Salvato sul dispositivo, da sincronizzare"})}
 window.SCHEDA={
-attach:function(r,data){ref=r;dirty=false;
-if(data&&data.json){try{S=mg(JSON.parse(data.json))}catch(e){S=cl(DEF)}$("sv").textContent="✓ Sincronizzato"}
-else{S=cl(DEF);r.set({json:JSON.stringify(S)}).then(function(){$("sv").textContent="✓ Salvato"}).catch(function(){$("sv").textContent="Errore di salvataggio"})}
-try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+hasLocal:function(uid){return lget(UK)===uid&&!!lget(KEY)},
+attach:function(r,data,uid,offline){ref=r;dirty=false;
+var prev=lget(UK),loc=null;try{loc=JSON.parse(lget(KEY)||"null")}catch(e){}
+var mine=!!loc&&prev===uid;lset(UK,uid);
+if(offline&&mine){S=mg(loc);$("sv").textContent="Offline: uso la copia salvata sul dispositivo";if(lget(PK)==="1")pushCloud(r)}
+else if(mine&&lget(PK)==="1"){S=mg(loc);pushCloud(r)}
+else if(data&&data.json){try{S=mg(JSON.parse(data.json))}catch(e){S=cl(DEF)}$("sv").textContent="✓ Sincronizzato"}
+else{S=cl(DEF);pushCloud(r)}
+lset(KEY,JSON.stringify(S));
 render();$("idp").hidden=!!S.ok},
-detach:function(){ref=null;try{localStorage.removeItem(KEY)}catch(e){}}};
+detach:function(){ref=null;ldel(KEY);ldel(UK);ldel(PK)}};
 })();
 </script>
 <script>
@@ -487,8 +498,8 @@ if("serviceWorker" in navigator)addEventListener("load",function(){navigator.ser
 </script>
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-import{getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,sendEmailVerification,sendPasswordResetEmail,signOut,setPersistence,browserLocalPersistence,browserSessionPersistence}from"https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-import{getFirestore,initializeFirestore,persistentLocalCache,persistentMultipleTabManager,doc,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+import{initializeAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,sendEmailVerification,sendPasswordResetEmail,signOut,setPersistence,browserLocalPersistence,browserSessionPersistence}from"https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
 /* ====== Configurazione del progetto Firebase ====== */
 const firebaseConfig={
@@ -501,18 +512,36 @@ const firebaseConfig={
 };
 
 const $=i=>document.getElementById(i);
+const TS=window.__ts||1,t0=performance.now();
+const tmo=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej({code:"timeout"}),ms*TS))]);
 const EYE='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
 const EYEOFF='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 19c-7 0-11-7-11-7a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></svg>';
-let mode="login";
+let mode="login",authReady=false;
+const D={};
+function diag(){const L=[];
+L.push("Versione app: 3");
+L.push("Modalità: "+((navigator.standalone||matchMedia("(display-mode: standalone)").matches)?"app installata":"browser"));
+L.push("Rete: "+(navigator.onLine?"online":"offline"));
+let ls="ok";try{localStorage.setItem("t","1");localStorage.removeItem("t")}catch(e){ls="non disponibile"}
+L.push("Memoria locale: "+ls);
+L.push("IndexedDB: "+(D.idb||"in verifica…"));
+L.push("Service worker: "+((navigator.serviceWorker&&navigator.serviceWorker.controller)?"attivo":"non attivo"));
+L.push("Accesso Firebase: "+(D.auth||"in attesa…"));
+L.push("Ultimo passaggio: "+(D.step||"-"));
+$("diag").textContent=L.join("\n")}
+function step(t){D.step=t;diag()}
+try{const q=indexedDB.open("diag-test");const to=setTimeout(()=>{D.idb="non risponde (oltre 3 secondi)";diag()},3000*TS);q.onsuccess=()=>{clearTimeout(to);D.idb="ok";try{q.result.close()}catch(e){}diag()};q.onerror=()=>{clearTimeout(to);D.idb="errore";diag()}}catch(e){D.idb="non disponibile"}
 function msg(t,ok){const m=$("amsg");m.textContent=t||"";m.style.color=ok?"var(--grn)":"var(--red)"}
 const ERR={
+"timeout":"Il collegamento non risponde. Controlla la rete, chiudi completamente l’app, riaprila e riprova.",
 "auth/invalid-credential":"Email o password non corretti.","auth/wrong-password":"Email o password non corretti.","auth/user-not-found":"Email o password non corretti.",
 "auth/invalid-email":"L’indirizzo email non è valido.","auth/email-already-in-use":"Questa email è già registrata: passa a «Accedi».",
 "auth/weak-password":"La password è troppo debole.","auth/too-many-requests":"Troppi tentativi: riprova tra qualche minuto.",
-"auth/missing-password":"Inserisci la password.","auth/unauthorized-domain":"Questo indirizzo del sito non è autorizzato in Firebase: aggiungilo in Authentication → Impostazioni → Domini autorizzati.",
+"auth/missing-password":"Inserisci la password.",
+"auth/unauthorized-domain":"Questo indirizzo del sito non è autorizzato in Firebase: aggiungilo in Authentication → Impostazioni → Domini autorizzati.",
 "auth/operation-not-allowed":"Questo metodo di accesso non è attivo nel progetto Firebase.",
 "auth/network-request-failed":"Connessione assente."};
-function err(e){msg(ERR[e.code]||("Errore: "+(e.code||e.message)),false)}
+function err(e){step("errore: "+(e.code||e.message));msg(ERR[e.code]||("Errore: "+(e.code||e.message)),false)}
 const em=()=>$("aem").value.trim().toLowerCase(),pw=()=>$("apw").value;
 const crit=p=>({len:p.length>=8,up:/[A-Z]/.test(p),lo:/[a-z]/.test(p),num:/\d/.test(p),same:p.length>0&&p===$("apw2").value});
 const critOk=()=>Object.values(crit(pw())).every(Boolean);
@@ -535,37 +564,51 @@ $("aswitch").onclick=()=>setMode(mode==="reg"?"login":"reg");
 ["aem","apw","apw2"].forEach(i=>{$(i).addEventListener("input",updCrit);$(i).addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("asubmit").click()}})});
 setMode("login");
 try{const se=localStorage.getItem("scheda-email");if(se)$("aem").value=se}catch(e){}
+diag();
 
 if(firebaseConfig.apiKey==="INCOLLA_QUI"){msg("Configurazione Firebase mancante.",false)}
 else{
-const app=initializeApp(firebaseConfig),auth=getAuth(app);let db;try{db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})})}catch(e){db=getFirestore(app)}
+const app=initializeApp(firebaseConfig);
+/* niente IndexedDB per l'accesso: su iPad nelle app installate può bloccarsi, la memoria locale no */
+const auth=initializeAuth(app,{persistence:[browserLocalPersistence,browserSessionPersistence]});
+const db=getFirestore(app);
+setTimeout(()=>{if(!authReady){step("il servizio di accesso non risponde");msg("Il servizio di accesso non risponde. Chiudi completamente l’app e riaprila; se succede ancora, apri «Diagnostica» qui sotto e mandami una schermata.",false)}},8000*TS);
 $("asubmit").onclick=async()=>{msg("");
 if(!em()){msg("Inserisci la tua email.",false);return}
-if(mode==="login"){if(!pw()){msg("Inserisci la password.",false);return}const rem=$("arem").checked;try{rem?localStorage.setItem("scheda-email",em()):localStorage.removeItem("scheda-email")}catch(e){}
-try{await setPersistence(auth,rem?browserLocalPersistence:browserSessionPersistence);await signInWithEmailAndPassword(auth,em(),pw())}catch(e){err(e)}return}
+if(mode==="login"){if(!pw()){msg("Inserisci la password.",false);return}
+const rem=$("arem").checked;try{rem?localStorage.setItem("scheda-email",em()):localStorage.removeItem("scheda-email")}catch(e){}
+step("accesso in corso");
+try{await tmo(setPersistence(auth,rem?browserLocalPersistence:browserSessionPersistence),8000);await tmo(signInWithEmailAndPassword(auth,em(),pw()),15000);step("accesso riuscito")}catch(e){err(e)}return}
 if(!critOk()){msg("La password non rispetta tutti i criteri indicati.",false);return}
-try{await setPersistence(auth,browserLocalPersistence);const x=await createUserWithEmailAndPassword(auth,em(),pw());await sendEmailVerification(x.user)}catch(e){err(e)}};
-$("areset").onclick=async()=>{if(!em()){msg("Scrivi prima la tua email.",false);return}try{await sendPasswordResetEmail(auth,em());msg("Ti abbiamo inviato un’email per reimpostare la password.",true)}catch(e){err(e)}};
+step("registrazione in corso");
+try{await tmo(setPersistence(auth,browserLocalPersistence),8000);const x=await tmo(createUserWithEmailAndPassword(auth,em(),pw()),15000);await sendEmailVerification(x.user);step("registrato")}catch(e){err(e)}};
+$("areset").onclick=async()=>{if(!em()){msg("Scrivi prima la tua email.",false);return}try{await tmo(sendPasswordResetEmail(auth,em()),15000);msg("Ti abbiamo inviato un’email per reimpostare la password.",true)}catch(e){err(e)}};
 $("aresend").onclick=async()=>{try{await sendEmailVerification(auth.currentUser);msg("Email di conferma inviata di nuovo.",true)}catch(e){err(e)}};
 $("adone").onclick=async()=>{try{await auth.currentUser.reload();await auth.currentUser.getIdToken(true);location.reload()}catch(e){err(e)}};
-const out=async()=>{await signOut(auth);window.SCHEDA.detach();location.reload()};
+const out=async()=>{try{await tmo(signOut(auth),4000)}catch(e){}window.SCHEDA.detach();location.reload()};
 $("aout").onclick=out;$("logout").onclick=out;
 const wait=on=>{$("aform").hidden=on;["aresend","aout","adone"].forEach(i=>$(i).hidden=!on)};
 onAuthStateChanged(auth,async u=>{
+  authReady=true;D.auth="pronto dopo "+Math.round(performance.now()-t0)+" ms · "+(u?"utente "+u.email:"nessun utente");diag();
   wait(false);["aresend","aout","adone"].forEach(i=>$(i).hidden=true);
   if(!u){document.body.classList.add("locked");return}
   if(!u.emailVerified){document.body.classList.add("locked");wait(true);
     msg("Account creato. Ti abbiamo inviato un’email a "+u.email+": aprila, tocca il link di conferma e poi premi «Ho confermato l’email». Controlla anche la cartella spam.",true);return}
   try{
-    const r=doc(db,"schede",u.uid),s=await getDoc(r);
-    window.SCHEDA.attach({set:o=>setDoc(r,o)},s.exists()?s.data():null);
+    const r=doc(db,"schede",u.uid);let data=null,off=false;
+    step("lettura della scheda");
+    try{const s=await tmo(getDoc(r),12000);data=s.exists()?s.data():null}
+    catch(e){if(e.code==="permission-denied")throw e;off=true}
+    if(off&&!window.SCHEDA.hasLocal(u.uid))throw{code:"unavailable"};
+    window.SCHEDA.attach({set:o=>setDoc(r,o)},data,u.uid,off);
     $("who").textContent="Collegato come "+u.email;
-    document.body.classList.remove("locked");msg("");
+    document.body.classList.remove("locked");msg("");step(off?"scheda aperta dalla copia locale":"scheda caricata");
   }catch(e){
-    document.body.classList.add("locked");wait(true);$("aresend").hidden=true;$("adone").hidden=true;
+    document.body.classList.add("locked");wait(true);$("aresend").hidden=true;$("adone").hidden=true;step("errore: "+(e.code||e.message));
     msg(e.code==="permission-denied"
       ?"Sei collegato come "+u.email+", ma questa email non risulta tra gli invitati. Nella raccolta «invitati» deve esistere un documento con questo ID esatto, in minuscolo: "+String(u.email).toLowerCase()
-      :e.code==="unavailable"?"Sei offline e questa scheda non è ancora salvata su questo dispositivo: collegati a internet almeno una volta.":"Errore di collegamento: "+(e.code||e.message),false);
+      :e.code==="unavailable"?"Non riesco a leggere la scheda e su questo dispositivo non ce n’è una copia: collegati a internet e riprova."
+      :"Errore di collegamento: "+(e.code||e.message),false);
   }
 });
 }

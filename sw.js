@@ -1,6 +1,6 @@
 /* Service worker della Scheda D&D 5e.
    Cambia il numero di versione qui sotto quando aggiorni i file, così i dispositivi ricaricano la copia nuova. */
-const V = "scheda-dnd-v2";
+const V = "scheda-dnd-v3";
 const SHELL = ["index.html", "manifest.webmanifest", "icon-192.png", "icon-512.png", "icon-512-maskable.png", "icon-180.png"];
 const CDN = ["https://www.gstatic.com/firebasejs/", "https://fonts.googleapis.com/", "https://fonts.gstatic.com/"];
 
