@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#e2dfec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Scheda D&amp;D">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Scheda campagna D&amp;D 5e</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Inter:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#eceaf3;--bg2:#e2dfec;--card:#faf9fd;--ink:#1c1930;--mute:#625c78;--line:#cfcadd;--gold:#8a5a00;--blue:#1e3a8a;--red:#b4232f;--grn:#157347;--acc:#b5651d;--onacc:#fff;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b0f19;--bg2:#0f172a;--card:#141b2e;--ink:#f1f5f9;--mute:#94a3b8;--line:#2a3550;--gold:#fcd34d;--blue:#93c5fd;--red:#fda4af;--grn:#6ee7b7;--acc:#f59e0b;--onacc:#1a1200;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b0f19;--bg2:#0f172a;--card:#141b2e;--ink:#f1f5f9;--mute:#94a3b8;--line:#2a3550;--gold:#fcd34d;--blue:#93c5fd;--red:#fda4af;--grn:#6ee7b7;--acc:#f59e0b;--onacc:#1a1200;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.4 Inter,system-ui,sans-serif;padding-bottom:90px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg2);z-index:21}
+.f,h1,.h{font-family:Cinzel,Georgia,serif}
+.wrap{max-width:1000px;margin:0 auto;padding:0 12px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg2);border-bottom:1px solid var(--line);padding:8px 0}
+h1{margin:0;font-size:1.35rem;color:var(--gold)}
+.h{display:block;margin:0 0 8px;font-size:.8rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--gold)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.sp{justify-content:space-between}
+.mute{color:var(--mute)}.small{font-size:.8rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px}
+.grid{display:grid;gap:10px}.g6{grid-template-columns:repeat(auto-fit,minmax(110px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}.g4{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+input,select,textarea{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:8px;padding:6px 8px;width:100%;min-width:0}
+select option{background:var(--card);color:var(--ink)}
+textarea{min-height:90px;resize:vertical}
+input[type=checkbox]{width:20px;height:20px;accent-color:var(--acc);flex:none}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.btn{font:inherit;font-size:.82rem;font-weight:600;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:10px;padding:7px 10px;min-height:38px;cursor:pointer}
+.btn.p{background:var(--acc);color:var(--onacc);border-color:var(--acc)}.btn.d{color:var(--red)}.btn.ok{color:var(--grn)}
+.btn[aria-pressed=true]{background:var(--acc);color:var(--onacc);border-color:var(--acc)}
+.stat{text-align:center;border:1px solid var(--line);border-radius:10px;padding:4px 10px;background:var(--card)}.stat small{display:block;font-size:.65rem;text-transform:uppercase;letter-spacing:.06em;color:var(--mute)}.stat b{font-size:.95rem}
+.pill{font-size:.72rem;font-weight:700;border:1px solid var(--line);border-radius:99px;padding:2px 10px}.pill.gold{color:var(--gold);border-color:var(--gold)}
+.ab{text-align:center}.ab .m{font:800 1.7rem Cinzel,serif;color:var(--ink);background:none;border:0;cursor:pointer;min-height:44px;width:100%}
+.ab input{text-align:center;font-weight:700;width:64px;margin:2px auto 0;display:block}
+.bar{height:12px;background:var(--line);border-radius:6px;overflow:hidden;margin:6px 0}.bar i{display:block;height:100%;width:0;transition:width .3s}
+.hp{font:800 2rem Cinzel,serif}.ca{width:64px;height:64px;border:2px solid var(--gold);border-radius:16px;display:grid;place-items:center;font:800 1.8rem Cinzel,serif}
+.tabs{display:flex;gap:6px;overflow-x:auto;margin:4px 0 12px}.tabs .btn{flex:1;white-space:nowrap}.tabs .btn[aria-selected=true]{background:var(--acc);color:var(--onacc);border-color:var(--acc)}
+.tab{display:none}.tab.on{display:block}
+.line{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--line)}.line:last-child{border:0}.line .n{flex:1}.line .v{min-width:56px}
+.wp{padding:8px 0;border-bottom:1px solid var(--line)}.wp:last-child{border:0}.wp .row{margin-top:6px}
+.feat{padding:6px 0;border-bottom:1px solid var(--line)}.feat p{margin:2px 0 0;color:var(--mute);font-size:.85rem}
+.sl{display:flex;align-items:center;gap:6px;padding:4px 0;flex-wrap:wrap}.sl b{width:52px}
+.pip{width:32px;height:32px;min-height:0;border-radius:50%;border:2px solid var(--acc);background:transparent;padding:0;cursor:pointer}.pip[aria-pressed=true]{background:var(--acc)}
+.lvp{border:2px solid var(--acc);border-radius:12px;padding:10px;margin-top:8px}
+#res{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:30;background:var(--bg2);border:2px solid var(--acc);border-radius:14px;padding:10px 16px;display:flex;align-items:center;gap:12px;max-width:94vw;box-shadow:0 6px 24px #0006;cursor:pointer}
+#res.crit{border-color:var(--grn)}#res.fail{border-color:var(--red)}
+#res .big{font:800 2rem Cinzel,serif;color:var(--gold)}#res small{color:var(--mute)}
+#hl{margin:0;padding-left:18px}#hl li{padding:2px 0;font-size:.88rem}
+input,select{height:40px}input[type=checkbox]{height:20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:40px;padding:0 12px;line-height:1.1;text-align:center}
+.top .btn,.top .stat{height:44px}
+.stat{display:flex;flex-direction:column;justify-content:center;padding:0 12px}
+.stat.btn{flex-direction:column}
+.res{border:1px solid var(--line);border-radius:12px;padding:10px;margin-bottom:8px}
+.res.on{border-color:var(--acc);box-shadow:inset 0 0 0 2px var(--acc);background:color-mix(in srgb,var(--acc) 12%,transparent)}
+.pip[aria-pressed=false]{border-style:dashed;opacity:.5}
+.dice{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:12px}
+@media(max-width:660px){.dice{grid-template-columns:1fr}}
+.rbox{border:1px solid var(--line);border-radius:14px;padding:12px;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;background:linear-gradient(160deg,var(--bg2),var(--card))}
+.rbox .t{font-size:.82rem;color:var(--mute)}
+.tot{font:800 3.4rem/1 Cinzel,Georgia,serif;color:var(--gold)}
+.rbox.crit{box-shadow:0 0 0 2px var(--grn),0 0 24px #22c55e55}.rbox.fail{box-shadow:0 0 0 2px var(--red),0 0 24px #ef444455}
+.chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.chip{min-width:34px;height:34px;display:grid;place-items:center;border:2px solid var(--acc);border-radius:9px;font-weight:700;padding:0 6px}
+.chip.hi{background:var(--acc);color:var(--onacc)}.chip.off{opacity:.35;text-decoration:line-through}
+.det{color:var(--mute)}
+.pop{animation:pop .35s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{0%{transform:scale(.7) rotate(-6deg);opacity:.3}100%{transform:none;opacity:1}}
+@media(prefers-reduced-motion:reduce){.pop{animation:none}}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:8px}
+.dq{display:grid;grid-template-columns:repeat(auto-fit,minmax(54px,1fr));gap:6px;margin-bottom:8px}
+.seg .btn,.dq .btn{width:100%;padding:0}
+.mrow{display:grid;grid-template-columns:72px 1fr 72px auto;gap:8px;align-items:end;margin-bottom:8px}
+.mrow label,.wg label,.wg3 label,.idg label{display:flex;flex-direction:column;gap:2px}
+.wg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.wg3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:8px}
+.wbtn{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}.wbtn .btn{width:100%}
+.coin{display:grid;grid-template-columns:68px 44px 44px minmax(0,1fr) 44px 44px;gap:6px;align-items:center;margin-bottom:6px}
+.coin .btn{width:44px;padding:0}
+.tx{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+#res{flex-direction:column;gap:4px;text-align:center;padding:8px 18px}
+#res .tot{font-size:2.2rem}#res .t{font-size:.8rem;color:var(--mute)}
+.amm{border:1px dashed var(--line);border-radius:10px;padding:8px;margin-bottom:8px}
+body.locked header.top,body.locked main,body.locked #res{display:none}
+#auth{display:none}body.locked #auth{display:block}
+.fld{margin-top:10px}.fld label{display:block;font-size:.8rem;color:var(--mute);margin-bottom:2px}
+.pw{position:relative}.pw input{padding-right:48px}
+.eye{position:absolute;right:2px;top:0;width:44px;height:40px;border:0;background:transparent;color:var(--mute);display:grid;place-items:center;cursor:pointer;border-radius:8px}
+.seg2{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:14px}
+.seg2 .btn[aria-selected=true]{background:var(--acc);color:var(--onacc);border-color:var(--acc)}
+.crit{list-style:none;margin:10px 0 0;padding:0}.crit li{font-size:.86rem;color:var(--mute);padding:2px 0}
+.crit li::before{content:"○ "}.crit li.ok{color:var(--grn)}.crit li.ok::before{content:"✓ "}
+#asubmit:disabled{opacity:.5;cursor:not-allowed}
+.lnk{border:0;background:transparent;color:var(--mute);text-decoration:underline;height:auto;padding:8px 4px}
+</style>
+</head>
+<body class="locked">
+<div id="auth" class="wrap" style="margin-top:24px"><section class="card" style="max-width:440px;margin:0 auto">
+<h1 class="f" style="margin-bottom:12px">Scheda D&amp;D 5e</h1>
+<div id="aform">
+<div class="seg2" role="tablist" aria-label="Accedi o registrati"><button type="button" class="btn" id="tlogin" role="tab" aria-selected="true">Accedi</button><button type="button" class="btn" id="treg" role="tab" aria-selected="false">Registrati</button></div>
+<h2 class="f" id="ahead" style="margin:0 0 4px;font-size:1.1rem"></h2>
+<p class="small mute" id="asub" style="margin:0"></p>
+<div class="fld"><label for="aem">Email</label><input id="aem" type="email" autocomplete="email" inputmode="email" autocapitalize="none"></div>
+<div class="fld"><label for="apw">Password</label><div class="pw"><input id="apw" type="password" autocomplete="current-password"><button type="button" class="eye" data-eye="apw"></button></div></div>
+<label class="row small" id="rembox" style="margin-top:12px;cursor:pointer"><input type="checkbox" id="arem" checked><span>Ricordami su questo dispositivo</span></label>
+<div id="regbox" hidden>
+<div class="fld"><label for="apw2">Ripeti la password</label><div class="pw"><input id="apw2" type="password" autocomplete="new-password"><button type="button" class="eye" data-eye="apw2"></button></div></div>
+<ul class="crit" id="crit" aria-label="Criteri della password"><li data-c="len">Almeno 8 caratteri</li><li data-c="up">Una lettera maiuscola</li><li data-c="lo">Una lettera minuscola</li><li data-c="num">Un numero</li><li data-c="same">Le due password coincidono</li></ul>
+</div>
+<button type="button" class="btn p" id="asubmit" style="width:100%;margin-top:14px"></button>
+<div class="row sp" style="margin-top:6px"><button type="button" class="btn lnk" id="areset">Password dimenticata?</button><button type="button" class="btn lnk" id="aswitch"></button></div>
+</div>
+<div class="wbtn" style="margin-top:8px"><button type="button" class="btn p" id="adone" hidden>Ho confermato l’email</button><button type="button" class="btn" id="aresend" hidden>Reinvia l’email di conferma</button><button type="button" class="btn" id="aout" hidden>Esci</button></div>
+<p class="small" id="amsg" role="alert" style="margin:12px 0 0"></p></section></div>
+<header class="top"><div class="wrap"><div class="row sp">
+<div><div class="row"><h1 id="hname"></h1><button class="btn" id="edid" aria-label="Modifica il personaggio" title="Modifica il personaggio" style="height:32px;padding:0 10px">✎</button></div><div class="row"><span class="pill" id="hbadge"></span><span class="pill gold" id="oath" hidden></span><span class="mute small" id="hsub"></span></div></div>
+<div class="row">
+<div class="stat"><small>Competenza</small><b id="prof"></b></div>
+<div class="stat"><small>Velocità</small><b id="speed"></b></div>
+<button class="stat btn" id="init" title="Tira iniziativa"><small>Iniziativa 🎲</small><b id="inival"></b></button>
+<button class="btn" id="insp">☆ Ispirazione</button>
+<button class="btn" id="theme" aria-label="Cambia tema chiaro o scuro" title="Tema chiaro o scuro" style="min-width:48px;font-size:1.15rem">🌓</button>
+</div></div></div></header>
+
+<main class="wrap" style="margin-top:12px">
+<section class="card" id="idp" hidden><b class="h">Il tuo personaggio</b>
+<div class="grid g4 idg">
+<label class="small mute">Nome<input data-f="nome"></label>
+<label class="small mute">Classe<select data-f="cls"><option value="paladino">Paladino</option><option value="druido">Druido</option><option value="barbaro">Barbaro</option><option value="stregone">Stregone</option></select></label>
+<label class="small mute">Razza<select data-f="raz"><option value="nano">Nano delle Colline</option><option value="elfo">Elfo dei Boschi</option><option value="mezzorco">Mezzorco</option><option value="umano">Umano</option></select></label>
+<label class="small mute">Livello<input type="number" min="1" max="20" data-f="liv"></label>
+<label class="small mute">Sottoclasse<input data-f="sub" placeholder="Giuramento, circolo, cammino, origine"></label>
+<label class="small mute">Background<input data-f="bg"></label>
+<label class="small mute">Allineamento<input data-f="all"></label>
+<label class="small mute">PF massimi manuali (vuoto = auto)<input type="number" min="1" data-f="pfmo"></label></div>
+<p class="small mute">Nelle caratteristiche inserisci i punteggi <b>base</b>: i bonus della razza si sommano da soli.</p>
+<button class="btn p" id="idok">Fatto</button></section>
+
+<section class="card">
+<div class="row sp"><b class="h" style="margin:0">⭐ Punti esperienza</b><span class="small" id="xpl"></span></div>
+<div class="bar"><i id="xpb" style="background:var(--acc)"></i></div>
+<div class="row">
+<button class="btn" data-xp="50">+50</button><button class="btn" data-xp="100">+100</button><button class="btn" data-xp="300">+300</button>
+<input id="xpi" type="number" min="0" placeholder="PE" style="width:90px" aria-label="Punti esperienza">
+<button class="btn" id="xpa">Aggiungi</button><button class="btn" id="xps">Imposta</button>
+<button class="btn p" id="lvup" hidden>⬆ Sali di livello</button>
+</div>
+<div class="lvp" id="lvpanel" hidden><p id="lvtxt" style="margin:0 0 8px"></p><div class="row"><button class="btn p" id="lvok">Conferma</button><button class="btn" id="lvno">Chiudi</button></div></div>
+</section>
+
+<section><b class="h">Caratteristiche <span class="mute small" style="text-transform:none;letter-spacing:0;font-family:Inter,sans-serif;font-weight:400">· tocca il modificatore per tirare 1d20</span></b><div class="grid g6" id="abs" style="margin-bottom:12px"></div></section>
+
+<div class="grid g2">
+<section class="card"><b class="h">Classe armatura</b>
+<div class="row"><div class="ca" id="ca"></div><div class="small mute" id="cad"></div></div>
+<button class="btn" id="shield" style="width:100%;margin-top:8px"></button></section>
+<section class="card"><div class="row sp"><b class="h" style="margin:0">Punti ferita</b><label class="row small">PF temporanei <input type="number" min="0" data-f="pft" style="width:64px"></label></div>
+<div class="row sp"><div><span class="hp" id="hpc"></span> <span class="mute" id="hpm"></span> <span class="small" id="hpmiss" style="color:var(--red)"></span> <span class="pill" id="hpt" hidden></span></div>
+<div class="row"><button class="btn d" id="hp-" aria-label="Meno 1 PF">−1</button><button class="btn ok" id="hp+" aria-label="Più 1 PF">+1</button></div></div>
+<div class="bar"><i id="hpb"></i></div><p class="mute small" id="hpf" style="margin:0 0 8px"></p>
+<div class="row"><input type="number" min="1" id="hpd" placeholder="Valore" style="width:84px" aria-label="Valore di danno o cura"><button class="btn d" id="dmg">Subisci danno</button><button class="btn ok" id="heal">Cura</button></div>
+<div class="row" style="margin-top:8px"><button class="btn" id="sr">⛺ Riposo breve (<span id="hdl"></span>)</button><button class="btn" id="lr">🌙 Riposo lungo</button></div>
+</section></div>
+
+<section class="card" id="dicecard"><div class="dice">
+<div class="rbox" id="rbox" aria-live="polite"><div class="t">Tocca un dado, una prova o un attacco per tirare</div></div>
+<div>
+<div class="seg"><button class="btn" data-mode="n">Normale</button><button class="btn" data-mode="a">Vantaggio</button><button class="btn" data-mode="s">Svantaggio</button></div>
+<div class="dq"><button class="btn" data-die="4">d4</button><button class="btn" data-die="6">d6</button><button class="btn" data-die="8">d8</button><button class="btn" data-die="10">d10</button><button class="btn" data-die="12">d12</button><button class="btn" data-die="20">d20</button><button class="btn" data-die="100">d100</button></div>
+<div class="mrow"><label class="small mute">N° dadi<input id="mq" type="number" min="1" max="30" value="1"></label><label class="small mute">Dado<select id="ms"><option value="4">d4</option><option value="6">d6</option><option value="8">d8</option><option value="10">d10</option><option value="12">d12</option><option value="20" selected>d20</option><option value="100">d100</option></select></label><label class="small mute">Modif.<input id="mm" type="number" value="0"></label><button class="btn p" id="mroll">🎲 Tira</button></div>
+<details><summary class="small mute" style="cursor:pointer;margin-bottom:6px">Cronologia dei tiri</summary><ol id="hl"></ol><button class="btn" id="clr" style="margin-top:6px">Svuota</button></details>
+</div></div></section>
+
+<nav class="tabs" aria-label="Sezioni della scheda">
+<button class="btn" data-tab="main" aria-selected="true">⚔ Principale</button>
+<button class="btn" data-tab="feat" aria-selected="false">✨ Classe e magie</button>
+<button class="btn" data-tab="inv" aria-selected="false">🎒 Equipaggiamento</button>
+</nav>
+
+<div class="tab on" id="t-main">
+<section class="card"><div class="row sp"><b class="h" style="margin:0">⚔ Armi</b><span class="pill gold" id="xa" hidden>Attacco extra: 2 attacchi</span></div><div id="weps"></div></section>
+<div class="grid g2">
+<section class="card"><b class="h">Tiri salvezza</b><div id="svs"></div><p class="small mute" style="margin-bottom:0">Le competenze dipendono dalla classe.</p></section>
+<section class="card"><b class="h">Abilità</b><p class="small mute" style="margin-top:0" id="skh"></p><p class="small mute" style="margin-top:0">Tocca il bonus per tirare. Percezione passiva: <b id="pp"></b></p><div id="sks"></div></section>
+</div></div>
+
+<div class="tab" id="t-feat">
+<section class="card"><b class="h">Risorse</b><div id="resbox"></div></section>
+<section class="card" id="spcard"><b class="h">Incantesimi</b>
+<div class="row" style="gap:10px"><div class="stat"><small>CD incantesimi</small><b id="cd"></b></div><div class="stat"><small>Bonus attacco</small><b id="batk"></b></div><div class="stat"><small>Trucchetti</small><b id="ctn"></b></div><div class="stat"><small id="spl">Preparati</small><b id="prepn"></b></div></div>
+<p class="small mute">Caratteristica da incantatore: <b id="abn"></b>.</p><div id="slots"></div>
+<div id="smwrap"><b class="small">Punizione divina</b><div class="row" id="smites" style="margin-top:4px"></div></div>
+<label class="small mute" style="display:block;margin-top:10px">Trucchetti<textarea data-f="truc" style="min-height:60px"></textarea></label>
+<label class="small mute" style="display:block;margin-top:8px"><span id="spl2">Incantesimi</span><textarea data-f="prep"></textarea></label>
+</section>
+<section class="card" id="stilebox"><label class="small mute">Stile di combattimento (paladino, dal livello 2)<select data-f="stile"><option value="">—</option><option value="difesa">Difesa (+1 CA con armatura)</option><option value="duello">Duellare</option><option value="due">Combattere con armi a due mani</option><option value="prot">Protezione</option></select></label></section>
+<section class="card"><b class="h">Privilegi di classe</b><div id="feats"></div></section>
+<section class="card"><b class="h">Tratti razziali</b><div id="rtr"></div></section>
+<section class="card"><b class="h">Competenze e lingue</b><p class="small mute" style="margin:0" id="cprof"></p></section>
+</div>
+
+<div class="tab" id="t-inv">
+<div class="grid g2">
+<section class="card"><b class="h">Armatura</b>
+<div class="grid g4 idg">
+<label class="small mute">Nome<input data-f="armnome"></label>
+<label class="small mute">Tipo<select data-f="tipoarm"><option value="nessuna">Nessuna (10 + DES; barbaro anche COS)</option><option value="leggera">Leggera (base + DES)</option><option value="media">Media (base + DES, max 2)</option><option value="pesante">Pesante (base)</option></select></label>
+<label class="small mute">CA base<input type="number" data-f="armbase"></label>
+<label class="small mute">Altri bonus CA<input type="number" data-f="cabonus"></label></div>
+<label class="row" style="margin-top:8px"><input type="checkbox" data-f="scudo"><span>Scudo equipaggiato (+2 CA)</span></label></section>
+<section class="card"><b class="h">Monete</b><div id="coins"></div>
+<div class="tx"><input type="number" min="1" id="txa" placeholder="Importo" aria-label="Importo"><select id="txu" aria-label="Tipo di moneta"><option value="0">rame</option><option value="1">argento</option><option value="2">electrum</option><option value="3" selected>oro</option><option value="4">platino</option></select></div>
+<div class="wbtn" style="margin-top:8px"><button class="btn ok" id="txr">＋ Ricevi</button><button class="btn d" id="txs">− Spendi</button></div>
+<p class="small mute" id="mtot" style="margin:8px 0 0"></p></section></div>
+<section class="card"><b class="h">Equipaggiamento</b><textarea data-f="eq" aria-label="Equipaggiamento"></textarea></section>
+<section class="card"><b class="h">Note</b><textarea data-f="note" aria-label="Note"></textarea></section>
+<section class="card"><div class="row sp"><div><div class="small mute" id="who"></div><div class="small mute" id="sv"></div></div><div class="row"><button class="btn" id="logout">Esci</button><button class="btn d" id="reset">Azzera la scheda</button></div></div></section>
+</div>
+</main>
+
+<div id="res" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function(){
+var AB=["Forza","Destrezza","Costituzione","Intelligenza","Saggezza","Carisma"],B3=["FOR","DES","COS","INT","SAG","CAR"];
+var SK=[["Acrobazia",1],["Addestrare Animali",4],["Arcano",3],["Atletica",0],["Furtività",1],["Indagare",3],["Inganno",5],["Intimidire",5],["Intrattenere",5],["Intuizione",4],["Medicina",4],["Natura",3],["Percezione",4],["Persuasione",5],["Rapidità di mano",1],["Religione",3],["Sopravvivenza",4],["Storia",3]];
+var XPT=[0,300,900,2700,6500,14000,23000,34000,48000,64000,85000,100000,120000,140000,165000,195000,225000,265000,305000,355000];
+var H=[[],[2],[3],[3],[4,2],[4,2],[4,3],[4,3],[4,3,2],[4,3,2],[4,3,3],[4,3,3],[4,3,3,1],[4,3,3,1],[4,3,3,2],[4,3,3,2],[4,3,3,3,1],[4,3,3,3,1],[4,3,3,3,2],[4,3,3,3,2]];
+var FU=[[2],[3],[4,2],[4,3],[4,3,2],[4,3,3],[4,3,3,1],[4,3,3,2],[4,3,3,3,1],[4,3,3,3,2],[4,3,3,3,2,1],[4,3,3,3,2,1],[4,3,3,3,2,1,1],[4,3,3,3,2,1,1],[4,3,3,3,2,1,1,1],[4,3,3,3,2,1,1,1],[4,3,3,3,2,1,1,1,1],[4,3,3,3,3,1,1,1,1],[4,3,3,3,3,2,1,1,1],[4,3,3,3,3,2,2,1,1]];
+var RG=[2,2,3,3,3,4,4,4,4,4,4,5,5,5,5,5,6,6,6,6],SKN=[2,3,4,5,6,7,8,9,10,11,12,12,13,13,14,14,15,15,15,15],SC=[2,3,5,6,7];
+var ASI=[4,"Aumento dei punteggi","+2 a un punteggio o +1 a due, oppure un talento: modifica i punteggi base in alto."];
+var CLS={
+paladino:{n:"Paladino",hd:10,sv:[4,5],ab:5,sl:"h",sk:[3,9,7,10,13,15],ns:2,pr:"Tutte le armature, scudi, armi semplici e da guerra.",f:[
+[1,"Senso divino","Azione: fino alla fine del tuo prossimo turno individui celestiali, immondi e non morti entro 18 m. Usi: 1 + mod. Carisma per riposo lungo."],
+[1,"Imposizione delle mani","Riserva di PF pari a 5 × livello: con un’azione e un tocco ripristini PF; 5 PF curano una malattia o neutralizzano un veleno."],
+[2,"Stile di combattimento","Scegli nel menu: Difesa, Duellare, Combattere con armi a due mani o Protezione."],
+[2,"Incantesimi","Usi il Carisma. Prepari un numero di incantesimi pari al mod. Carisma + metà livello."],
+[2,"Punizione divina","Quando colpisci in mischia spendi uno slot: 2d8 radiosi, +1d8 per livello di slot oltre il 1° (max 5d8), +1d8 contro immondi e non morti."],
+[3,"Salute divina","Sei immune alle malattie."],[3,"Giuramento sacro","Scrivi il tuo giuramento nel campo Sottoclasse."],
+[3,"Incanalare divinità","Un uso per riposo breve o lungo, secondo il giuramento."],ASI,[5,"Attacco extra","Due attacchi con l’azione di Attacco."]]},
+druido:{n:"Druido",hd:8,sv:[3,4],ab:4,sl:"f",sk:[2,1,9,10,11,12,15,16],ns:2,pr:"Armature leggere e medie e scudi (non di metallo); bastoni ferrati, clave, dardi, falcetti, fionde, giavellotti, lance, mazze, pugnali, scimitarre.",f:[
+[1,"Druidico","Conosci il linguaggio segreto dei druidi e puoi lasciare messaggi nascosti."],
+[1,"Incantesimi","Usi la Saggezza. Conosci 2 trucchetti (3 dal 4° livello); prepari ogni giorno un numero di incantesimi pari al mod. Saggezza + livello. Puoi usare un focus druidico."],
+[2,"Forma selvatica","Con un’azione ti trasformi in una bestia già vista, per ore pari a metà del tuo livello. Due usi per riposo breve o lungo. Limiti: GS 1/4 senza nuoto né volo; GS 1/2 con nuoto dal 4°; GS 1 con volo dall’8°."],
+[2,"Circolo druidico","Scrivi il tuo circolo nel campo Sottoclasse."],ASI]},
+barbaro:{n:"Barbaro",hd:12,sv:[0,2],ab:null,sl:null,sk:[1,3,7,11,12,16],ns:2,pr:"Armature leggere e medie, scudi, armi semplici e da guerra.",f:[
+[1,"Ira","Azione bonus, 1 minuto: vantaggio a prove e TS di Forza, bonus ai danni in mischia con Forza (+2 fino all’8°, +3 dal 9°, +4 dal 16°), resistenza ai danni contundenti, perforanti e taglienti. Termina se non attacchi né subisci danni o se indossi armatura pesante."],
+[1,"Difesa senza armatura","Senza armatura: CA = 10 + mod. Destrezza + mod. Costituzione. Puoi usare lo scudo."],
+[2,"Attacco temerario","Primo attacco del turno con vantaggio (Forza), ma gli attacchi contro di te hanno vantaggio fino al tuo prossimo turno."],
+[2,"Percezione del pericolo","Vantaggio ai TS su Destrezza contro effetti che puoi vedere, se non sei accecato, assordato o incapacitato."],
+[3,"Cammino primitivo","Scrivi il tuo cammino nel campo Sottoclasse."],ASI,
+[5,"Attacco extra","Due attacchi con l’azione di Attacco."],[5,"Movimento veloce","+3 m di velocità se non indossi armatura pesante."]]},
+stregone:{n:"Stregone",hd:6,sv:[2,5],ab:5,sl:"f",sk:[2,6,9,7,13,15],ns:2,pr:"Pugnali, dardi, fionde, bastoni ferrati, balestre leggere.",f:[
+[1,"Incantesimi","Usi il Carisma. Conosci 4 trucchetti (5 dal 4°) e un numero di incantesimi indicato in alto. Puoi usare un focus arcano."],
+[1,"Origine stregonesca","Scrivi la tua origine nel campo Sottoclasse."],
+[2,"Fonte di magia","Hai punti stregoneria pari al livello. Puoi convertire punti in slot e slot in punti (vedi Risorse)."],
+[3,"Metamagia","Scegli 2 opzioni di Metamagia (scrivile negli appunti) e le usi spendendo punti stregoneria."],ASI]}};
+var RZ={
+nano:{n:"Nano delle Colline",v:7.5,b:[0,0,2,0,1,0],sk:[],hpl:1,lin:"Comune, Nanico",t:[["Scurovisione","Vedi in luce fioca entro 18 m come in luce intensa."],["Resilienza nanica","Vantaggio ai TS contro il veleno e resistenza al danno da veleno."],["Addestramento da combattimento nanico","Competenza con asce, asce da battaglia, martelli leggeri e martelli da guerra."],["Conoscenza della pietra","Doppio bonus di competenza alle prove di Storia sull’origine di opere in pietra."],["Tenacia nanica","+1 PF massimo per ogni livello (già incluso nel calcolo)."]]},
+elfo:{n:"Elfo dei Boschi",v:10.5,b:[0,2,0,0,1,0],sk:[12],hpl:0,lin:"Comune, Elfico",t:[["Scurovisione","Vedi in luce fioca entro 18 m come in luce intensa."],["Sensi acuti","Competenza in Percezione (già applicata)."],["Retaggio fatato","Vantaggio ai TS contro l’essere affascinato; la magia non può addormentarti."],["Trance","Riposi 4 ore invece di dormire 8."],["Addestramento con le armi elfiche","Competenza con spada corta, spada lunga, arco corto e arco lungo."],["Piedi veloci","Velocità base 10,5 m (già applicata)."],["Maschera della natura","Puoi nasconderti anche se solo leggermente oscurato da fogliame, pioggia, neve, nebbia o altri fenomeni naturali."]]},
+mezzorco:{n:"Mezzorco",v:9,b:[2,0,1,0,0,0],sk:[7],hpl:0,lin:"Comune, Orchesco",t:[["Scurovisione","Vedi in luce fioca entro 18 m come in luce intensa."],["Minaccioso","Competenza in Intimidire (già applicata)."],["Inarrestabile tenacia","Una volta per riposo lungo: se scendi a 0 PF ma non muori sul colpo, resti a 1 PF (vedi Risorse)."],["Attacchi brutali","Con un colpo critico in mischia tiri un dado di danno in più."]]},
+umano:{n:"Umano",v:9,b:[1,1,1,1,1,1],sk:[],hpl:0,lin:"Comune + una lingua a scelta",t:[["Versatilità","+1 a tutti i punteggi di caratteristica (già incluso) e una lingua a scelta."]]}};
+var KEY="dnd5e-campagna-v1";
+var blank=function(){return{n:"",a:0,q:1,s:8,vq:1,vs:0,b:0,p:0}};
+var DEF={nome:"",cls:"paladino",raz:"umano",sub:"",bg:"",all:"",ok:0,liv:1,xp:0,ab:[10,10,10,10,10,10],skp:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],dmg:0,pft:0,hdu:0,su:[0,0,0,0,0,0,0,0,0],bs:[0,0,0,0,0,0,0,0,0],ru:{},ra:{},insp:0,stile:"",pfmo:"",tipoarm:"nessuna",armnome:"",armbase:10,scudo:0,cabonus:0,w:[blank(),blank(),blank()],m:[0,0,0,0,0],eq:"",truc:"",prep:"",note:"",mode:"n",hist:[],theme:""};
+function cl(o){return JSON.parse(JSON.stringify(o))}
+function mg(s){var o=cl(DEF);for(var k in s)o[k]=s[k];return o}
+var S;try{S=mg(JSON.parse(localStorage.getItem(KEY)||"{}"))}catch(e){S=cl(DEF)}
+var ref=null,dirty=false,tm=null,rt=null,tab="main",lastCrit=false,armed=false,vis=true;
+function $(i){return document.getElementById(i)}
+function sg(x){return(x>=0?"+":"")+x}
+function n(v){v=parseInt(v);return isNaN(v)?0:v}
+function C(){return CLS[S.cls]||CLS.paladino}
+function R(){return RZ[S.raz]||RZ.umano}
+function tot(i){var v=parseInt(S.ab[i]);if(isNaN(v))v=10;return v+(R().b[i]||0)}
+function mod(i){return Math.floor((tot(i)-10)/2)}
+function L(){var l=parseInt(S.liv);return isNaN(l)?1:Math.max(1,Math.min(20,l))}
+function P(){return 2+Math.floor((L()-1)/4)}
+function pfMax(){var o=parseInt(S.pfmo);if(!isNaN(o)&&o>0)return o;var l=L(),hd=C().hd;return Math.max(1,hd+(l-1)*(Math.floor(hd/2)+1)+l*mod(2)+l*(R().hpl||0))}
+function hpCur(){return Math.max(0,pfMax()-n(S.dmg))}
+function RB(){var l=L();return l>=16?4:l>=9?3:2}
+function slotsFor(l){var t=C().sl;return t==="h"?H[l-1]:t==="f"?FU[l-1]:[]}
+function smax(k){return(slotsFor(L())[k]||0)+n(S.bs[k])}
+function caVal(){var t=S.tipoarm,b=parseInt(S.armbase),d=mod(1);if(isNaN(b))b=10;var c=t==="nessuna"?10+d+(S.cls==="barbaro"?mod(2):0):t==="leggera"?b+d:t==="media"?b+Math.min(d,2):b;return c+(S.scudo?2:0)+(S.stile==="difesa"&&S.cls==="paladino"&&t!=="nessuna"?1:0)+n(S.cabonus)}
+function gp(p){return p.split(".").reduce(function(a,k){return a==null?a:a[k]},S)}
+function sp(p,v){var k=p.split("."),o=S;for(var i=0;i<k.length-1;i++)o=o[k[i]];o[k[k.length-1]]=v}
+function d(x){return Math.floor(Math.random()*x)+1}
+
+function save(){dirty=true;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+if(ref){$("sv").textContent=navigator.onLine?"Salvataggio…":"Offline: salvato sul dispositivo, si sincronizza al ritorno della rete";clearTimeout(tm);tm=setTimeout(function(){ref.set({json:JSON.stringify(S)}).then(function(){$("sv").textContent="✓ Salvato"}).catch(function(){$("sv").textContent="Salvato solo su questo dispositivo"})},700)}
+else $("sv").textContent="Salvato su questo dispositivo"}
+
+function fill(r,t,v,det,fl,ch){r.textContent="";var a=document.createElement("div");a.className="t";a.textContent=t;var b=document.createElement("div");b.className="tot";b.textContent=v;var c=document.createElement("div");c.className="chips";(ch||[]).forEach(function(x){var s=document.createElement("span");s.className="chip"+(x.off?" off":"")+(x.hi?" hi":"");s.textContent=x.v;c.appendChild(s)});var e=document.createElement("small");e.className="det";e.textContent=det+(fl==="crit"?" · Critico!":fl==="fail"?" · Fallimento critico":"");r.append(a,b,c,e);r.classList.remove("pop","crit","fail");void r.offsetWidth;r.classList.add("pop");if(fl)r.classList.add(fl)}
+function show(t,v,det,fl,ch){fill($("rbox"),t,v,det,fl,ch);var r=$("res");if(!vis){fill(r,t,v,det,fl,ch);r.hidden=false;clearTimeout(rt);rt=setTimeout(function(){r.hidden=true},5000)}else r.hidden=true;S.hist.unshift(t+": "+v+" — "+det);S.hist=S.hist.slice(0,15);save();hist()}
+function hist(){var o=$("hl");o.textContent="";S.hist.forEach(function(h){var li=document.createElement("li");li.textContent=h;o.appendChild(li)})}
+function d20(b,t){var a=d(20),c=d(20),r=a,m=S.mode;if(m==="a")r=Math.max(a,c);else if(m==="s")r=Math.min(a,c);
+show(t+(m==="a"?" · vantaggio":m==="s"?" · svantaggio":""),r+b,"d20 "+r+" "+sg(b),r===20?"crit":r===1?"fail":"",m==="n"?[{v:a,hi:true}]:a===r?[{v:a,hi:true},{v:c,off:true}]:[{v:a,off:true},{v:c,hi:true}]);return r}
+function rollDice(q,s,fl,t,crit){var c=q*(crit?2:1),rs=[],tot2=fl;for(var i=0;i<c;i++){var x=d(s);rs.push(x);tot2+=x}
+show(t+(crit?" · critico":""),tot2,c+"d"+s+(fl?" "+sg(fl):"")+" = "+(tot2-fl)+(fl?" "+sg(fl):""),"",rs.map(function(v){return{v:v,hi:true}}))}
+var RT=[1,10,50,100,1000];
+function pay(a,pi){var m=S.m.map(n),c=a*RT[pi],t=0,i;m.forEach(function(x,k){t+=x*RT[k]});if(t<c)return false;
+var tk=Math.min(m[pi],a);m[pi]-=tk;c-=tk*RT[pi];
+for(i=0;i<5&&c>0;i++){if(i===pi)continue;tk=Math.min(m[i],Math.floor(c/RT[i]));m[i]-=tk;c-=tk*RT[i]}
+if(c>0){var j=-1;for(i=0;i<5;i++){if(m[i]>0&&RT[i]>c&&(j<0||RT[i]<RT[j]))j=i}if(j<0)return false;m[j]--;var ch=RT[j]-c;[3,1,0].forEach(function(k){var q=Math.floor(ch/RT[k]);m[k]+=q;ch-=q*RT[k]})}
+S.m=m;return true}
+function wInfo(i){var w=S.w[i],ai=parseInt(w.a)||0,am=mod(ai),b=n(w.b),rg=(S.ra.ira&&ai===0)?RB():0;return{w:w,am:am,rg:rg,at:am+(parseInt(w.p)?P():0)+b,dm:am+b+rg}}
+function atk(i){var x=wInfo(i),w=x.w;if(parseInt(w.am)){if(n(w.mu)<=0){show(w.n||"Arma","—","Munizioni esaurite");return}w.mu=n(w.mu)-1;w.ms=n(w.ms)+1}lastCrit=d20(x.at,(w.n||"Arma")+" · attacco")===20;render()}
+function dmg(i,v){var x=wInfo(i),w=x.w,q=v?n(w.vq):n(w.q),s=v?n(w.vs):n(w.s);if(!q||!s){show("Danno","—","Imposta il dado di danno");return}rollDice(q,s,x.dm,(w.n||"Arma")+(v?" a due mani":"")+" · danno"+(x.rg?" (ira)":""),lastCrit);lastCrit=false}
+function smite(k){var u=n(S.su[k-1]);if(u>=smax(k-1))return;S.su[k-1]=u+1;rollDice(Math.min(5,1+k),8,0,"Punizione divina (slot "+k+"°)",lastCrit);lastCrit=false;render()}
+
+function resList(){var c=S.cls,l=L(),r=[];
+if(c==="paladino"){r.push({id:"sd",n:"Senso divino",mx:Math.max(1,1+mod(5)),rest:"l",t:"act",d:"Fino alla fine del prossimo turno individui celestiali, immondi e non morti entro 18 m."});
+r.push({id:"loh",n:"Imposizione delle mani",mx:5*l,rest:"l",t:"pool",d:"Riserva di PF da distribuire con un tocco; 5 PF curano una malattia o un veleno."});
+if(l>=3)r.push({id:"cd",n:"Incanalare divinità",mx:1,rest:"b",t:"use",d:"Effetto secondo il giuramento scelto."})}
+if(c==="druido"&&l>=2)r.push({id:"fs",n:"Forma selvatica",mx:2,rest:"b",t:"act",d:"Ti trasformi in una bestia già vista per ore pari a metà del tuo livello."});
+if(c==="barbaro")r.push({id:"ira",n:"Ira",mx:RG[l-1],rest:"l",t:"act",d:"Vantaggio a prove e TS di Forza, bonus ai danni in mischia con Forza (+"+RB()+", già applicato) e resistenza ai danni contundenti, perforanti e taglienti."});
+if(c==="stregone"&&l>=2)r.push({id:"ps",n:"Punti stregoneria",mx:l,rest:"l",t:"pool",d:"Servono per la Metamagia e per convertire punti e slot."});
+if(S.raz==="mezzorco")r.push({id:"tn",n:"Inarrestabile tenacia",mx:1,rest:"l",t:"use",d:"Se scendi a 0 PF ma non muori sul colpo, resti a 1 PF."});
+return r}
+function resUI(){var b=$("resbox");b.textContent="";var rs=resList();
+if(!rs.length){b.innerHTML='<p class="small mute" style="margin:0">Nessuna risorsa da tracciare a questo livello.</p>';return}
+rs.forEach(function(r){var u=Math.min(r.mx,n(S.ru[r.id])),left=r.mx-u,on=!!S.ra[r.id];
+var h='<div class="res'+(on?' on':'')+'"><div class="row sp"><b>'+r.n+'</b>'+(on?'<span class="pill gold">IN USO</span>':'')+'<span class="small mute">'+left+'/'+r.mx+' · usati '+u+' · '+(r.rest==="l"?"riposo lungo":"riposo breve o lungo")+'</span></div>';
+if(r.t==="pool")h+='<div class="bar"><i style="width:'+(left/r.mx*100)+'%;background:var(--grn)"></i></div>';
+else{h+='<div class="sl" style="padding:0 0 4px">';for(var j=0;j<r.mx;j++)h+='<button type="button" class="pip" data-rp="'+r.id+'" data-av="'+(j<left?1:0)+'" aria-pressed="'+(j<left)+'" aria-label="'+r.n+(j<left?', disponibile':', usato')+'"></button>';h+='</div>'}
+h+='<p class="small mute" style="margin:4px 0 8px">'+r.d+'</p>';
+if(r.t==="act")h+='<button type="button" class="btn" style="width:100%" data-ract="'+r.id+'">'+(on?'■ Termina':'▶ Usa')+' '+r.n+'</button>';
+else if(r.t==="use")h+='<button type="button" class="btn" style="width:100%" data-ruse="'+r.id+'"'+(left?'':' disabled')+'>▶ Usa '+r.n+'</button>';
+else{h+='<div class="row"><input type="number" min="1" id="pn_'+r.id+'" placeholder="Quantità" style="flex:1" aria-label="Quantità"><button type="button" class="btn" data-rpool="'+r.id+',s">Spendi</button><button type="button" class="btn" data-rpool="'+r.id+',r">Recupera</button></div>';
+if(r.id==="loh")h+='<button type="button" class="btn" style="width:100%;margin-top:6px" data-rpool="loh,v">Cura veleno o malattia (5)</button>';
+if(r.id==="ps"){h+='<p class="small mute" style="margin:8px 0 4px">Crea uno slot (dura fino al riposo lungo)</p><div class="wbtn">';for(var k=1;k<=5;k++)h+='<button type="button" class="btn" data-cs="m,'+k+'"'+(left>=SC[k-1]?'':' disabled')+'>Slot '+k+'° · '+SC[k-1]+' PS</button>';h+='</div><p class="small mute" style="margin:8px 0 4px">Trasforma uno slot disponibile in punti</p><div class="wbtn">';for(var k2=1;k2<=5;k2++)h+='<button type="button" class="btn" data-cs="t,'+k2+'"'+(smax(k2-1)>n(S.su[k2-1])&&smax(k2-1)>0?'':' disabled')+'>Slot '+k2+'° → +'+k2+' PS</button>';h+='</div>'}}
+h+='</div>';b.insertAdjacentHTML("beforeend",h)})}
+
+function derived(){
+var l=L(),p=P(),m=pfMax(),a=hpCur(),c=C(),rz=R(),r=document.documentElement;
+if(S.theme)r.setAttribute("data-theme",S.theme);else r.removeAttribute("data-theme");
+$("hname").textContent=S.nome||"Nuovo personaggio";$("hbadge").textContent="Livello "+l;
+$("hsub").textContent=[rz.n,c.n,S.bg].filter(Boolean).join(" • ");
+$("oath").hidden=!S.sub;$("oath").textContent=S.sub;
+$("prof").textContent=sg(p);
+$("speed").textContent=String(rz.v+(S.cls==="barbaro"&&l>=5&&S.tipoarm!=="pesante"?3:0)).replace(".",",")+" m";
+$("inival").textContent=sg(mod(1));
+$("insp").textContent=(S.insp?"★":"☆")+" Ispirazione";$("insp").setAttribute("aria-pressed",S.insp?"true":"false");
+for(var i=0;i<6;i++){var bn=rz.b[i]||0,sv=c.sv.indexOf(i)>=0;$("am"+i).textContent=sg(mod(i));$("at"+i).textContent="Totale "+tot(i)+(bn?" (razza "+sg(bn)+")":"");$("svc"+i).checked=sv;$("sa"+i).textContent=sg(mod(i)+(sv?p:0))}
+SK.forEach(function(s,i){var rs=rz.sk.indexOf(i)>=0,cb=$("skc"+i);cb.checked=rs||!!parseInt(S.skp[i]);cb.disabled=rs;$("sk"+i).textContent=sg(mod(s[1])+(cb.checked?p:0))});
+$("skh").textContent="Competenze di classe: scegli "+c.ns+" tra "+c.sk.map(function(i){return SK[i][0]}).join(", ")+". Il background ne aggiunge altre due.";
+$("pp").textContent=10+mod(4)+($("skc12").checked?p:0);
+$("ca").textContent=caVal();
+var tn={nessuna:"senza armatura",leggera:"leggera",media:"media",pesante:"pesante"};
+$("cad").textContent=(S.armnome||"Armatura")+" ("+tn[S.tipoarm]+")"+(S.scudo?" + scudo":"")+(S.stile==="difesa"&&S.cls==="paladino"&&S.tipoarm!=="nessuna"?" + Stile Difesa":"")+(S.cls==="barbaro"&&S.tipoarm==="nessuna"?" · Difesa senza armatura":"");
+$("shield").textContent="🛡 Scudo "+(S.scudo?"equipaggiato (+2)":"non equipaggiato");$("shield").setAttribute("aria-pressed",S.scudo?"true":"false");
+$("hpc").textContent=a;$("hpm").textContent="/ "+m+" PF";$("hpmiss").textContent=a<m?"· mancano "+(m-a):"";
+var pc=Math.max(0,Math.min(100,a/m*100)),hb=$("hpb");hb.style.width=pc+"%";hb.style.background=pc<=25?"var(--red)":pc<=50?"var(--acc)":"var(--grn)";
+$("hpt").hidden=!n(S.pft);$("hpt").textContent="+"+n(S.pft)+" temp";
+$("hpf").textContent=parseInt(S.pfmo)>0?"Massimo impostato a mano.":"Massimo: d"+c.hd+" al 1° livello, poi "+(Math.floor(c.hd/2)+1)+" per livello, più COS"+(rz.hpl?" e +"+rz.hpl+" per livello dalla razza":"")+" per ogni livello.";
+$("hdl").textContent=Math.max(0,l-n(S.hdu))+"/"+l+" d"+c.hd;
+var xp=n(S.xp),nx=XPT[l],cu=XPT[l-1];
+$("xpl").textContent=l>=20?xp+" PE · livello massimo":xp+" / "+nx+" PE (prossimo: livello "+(l+1)+")";
+$("xpb").style.width=(l>=20?100:Math.max(0,Math.min(100,(xp-cu)/(nx-cu)*100)))+"%";
+$("lvup").hidden=!(l<20&&xp>=nx);
+for(var i=0;i<3;i++){var x=wInfo(i),w=x.w,has=!!w.n;$("wa"+i).hidden=$("wd"+i).hidden=!has;var uam=!!parseInt(w.am);$("amb"+i).hidden=!uam;$("wa"+i).disabled=uam&&n(w.mu)<=0;$("ams"+i).textContent=uam?(n(w.mu)>0?n(w.mu)+" "+(w.mt||"munizioni")+" rimaste · usate "+n(w.ms)+" in questo scontro":"Munizioni esaurite"):"";$("wa"+i).textContent="🎲 Attacco "+sg(x.at);$("wd"+i).textContent="🎲 Danno "+n(w.q)+"d"+n(w.s)+(x.dm?sg(x.dm):"")+(x.rg?" (ira)":"");$("wv"+i).hidden=!(has&&n(w.vs));$("wv"+i).textContent="🎲 Due mani "+n(w.vq)+"d"+n(w.vs)+(x.dm?sg(x.dm):"")}
+$("xa").hidden=!((S.cls==="paladino"||S.cls==="barbaro")&&l>=5);
+/* magia */
+var ci=c.ab;$("spcard").hidden=ci===null;
+if(ci!==null){$("cd").textContent=8+p+mod(ci);$("batk").textContent=sg(p+mod(ci));$("abn").textContent=AB[ci];
+var tr=S.cls==="druido"?(l>=10?4:l>=4?3:2):S.cls==="stregone"?(l>=10?6:l>=4?5:4):0;$("ctn").textContent=tr||"—";
+var pk=S.cls==="paladino"?(l>=2?Math.max(1,mod(5)+Math.floor(l/2)):0):S.cls==="druido"?Math.max(1,mod(4)+l):SKN[l-1];
+$("spl").textContent=$("spl2").textContent=S.cls==="stregone"?"Incantesimi conosciuti":"Incantesimi preparati";$("prepn").textContent=pk||"—"}
+var sl=$("slots");sl.textContent="";var any0=false;
+for(var k=0;k<9;k++){var mx=smax(k);if(mx<=0)continue;any0=true;var row=document.createElement("div");row.className="sl";var b=document.createElement("b");b.textContent="Liv. "+(k+1);row.appendChild(b);var u=Math.min(mx,n(S.su[k]));
+for(var j=0;j<mx;j++){var pb=document.createElement("button"),av=j<mx-u;pb.type="button";pb.className="pip";pb.setAttribute("data-slot",k+1);pb.setAttribute("data-av",av?"1":"0");pb.setAttribute("aria-pressed",av?"true":"false");pb.setAttribute("aria-label","Slot di livello "+(k+1)+(av?", disponibile":", usato"));row.appendChild(pb)}
+var cnt=document.createElement("span");cnt.className="small mute";cnt.textContent=(mx-u)+"/"+mx+" · usati "+u;row.appendChild(cnt);sl.appendChild(row)}
+if(!any0){var q=document.createElement("p");q.className="small mute";q.textContent=S.cls==="paladino"?"Gli incantesimi arrivano al livello 2.":"Nessuno slot a questo livello.";sl.appendChild(q)}
+$("smwrap").hidden=S.cls!=="paladino"||l<2;$("stilebox").hidden=S.cls!=="paladino";
+var sb=$("smites");sb.textContent="";var any=false;
+for(var k=0;k<5;k++){if(smax(k)>0&&n(S.su[k])<smax(k)){any=true;var bt=document.createElement("button");bt.type="button";bt.className="btn";bt.setAttribute("data-sm",k+1);bt.textContent="☀ Slot "+(k+1)+"° ("+Math.min(5,k+2)+"d8)";sb.appendChild(bt)}}
+if(!any)sb.textContent="Nessuno slot disponibile.";
+/* privilegi */
+var fs=c.f.filter(function(f){return f[0]<=l}).map(function(f){return'<div class="feat"><b>'+f[1]+' <span class="mute small">· liv. '+f[0]+'</span></b><p>'+f[2]+'</p></div>'}).join("");
+var nf=c.f.filter(function(f){return f[0]===l+1}).map(function(f){return f[1]}).join(", ");
+$("feats").innerHTML=fs+(l>=5?'<p class="small mute" style="margin-bottom:0">Questa scheda descrive i privilegi fino al 5° livello: aggiungi gli altri negli appunti.</p>':nf?'<p class="small mute" style="margin-bottom:0">Al livello '+(l+1)+': '+nf+'</p>':"");
+$("rtr").innerHTML=rz.t.map(function(t){return'<div class="feat"><b>'+t[0]+'</b><p>'+t[1]+'</p></div>'}).join("");
+$("cprof").textContent="Competenze: "+c.pr+" Lingue: "+rz.lin+".";
+$("mtot").textContent="Valore totale: "+String(Math.round((n(S.m[0])/100+n(S.m[1])/10+n(S.m[2])/2+n(S.m[3])+n(S.m[4])*10)*100)/100).replace(".",",")+" mo";
+document.querySelectorAll("[data-mode]").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-mode")===S.mode?"true":"false")});
+document.querySelectorAll("[data-tab]").forEach(function(b){b.setAttribute("aria-selected",b.getAttribute("data-tab")===tab?"true":"false")});
+document.querySelectorAll(".tab").forEach(function(t){t.classList.toggle("on",t.id==="t-"+tab)});
+$("reset").textContent=armed?"Tocca di nuovo per confermare":"Azzera la scheda";
+resUI()}
+
+function render(){document.querySelectorAll("[data-f]").forEach(function(el){var v=gp(el.getAttribute("data-f"));if(el.type==="checkbox")el.checked=!!parseInt(v);else if(el!==document.activeElement)el.value=v==null?"":v});derived();hist()}
+
+/* costruzione elenchi */
+var opts=AB.map(function(x,i){return'<option value="'+i+'">'+x+'</option>'}).join("");
+AB.forEach(function(x,i){$("abs").insertAdjacentHTML("beforeend",'<div class="card ab" style="margin:0"><div class="f small">'+x+'</div><button type="button" class="m" data-rab="'+i+'" id="am'+i+'" aria-label="Prova di '+x+'"></button><input type="number" data-f="ab.'+i+'" aria-label="Punteggio base di '+x+'"><div class="small mute" id="at'+i+'"></div></div>');
+$("svs").insertAdjacentHTML("beforeend",'<div class="line"><input type="checkbox" id="svc'+i+'" disabled aria-label="Competenza nel tiro salvezza di '+x+'"><span class="n">'+x+'</span><button type="button" class="btn v" data-rsv="'+i+'" id="sa'+i+'"></button></div>')});
+SK.forEach(function(s,i){$("sks").insertAdjacentHTML("beforeend",'<div class="line"><input type="checkbox" id="skc'+i+'" data-f="skp.'+i+'" aria-label="Competenza in '+s[0]+'"><span class="n">'+s[0]+' <span class="mute small">('+B3[s[1]]+')</span></span><button type="button" class="btn v" data-rsk="'+i+'" id="sk'+i+'"></button></div>')});
+var dO=[4,6,8,10,12].map(function(x){return'<option value="'+x+'">d'+x+'</option>'}).join(""),vO='<option value="0">—</option>'+dO;
+var WP=[["Ascia da battaglia",1,8,1,10,0],["Spada lunga",1,8,1,10,0],["Spada corta",1,6,0,0,1],["Stocco",1,8,0,0,1],["Scimitarra",1,6,0,0,1],["Martello da guerra",1,8,1,10,0],["Mazza",1,6,0,0,0],["Ascia",1,6,0,0,0],["Ascia bipenne",1,12,0,0,0],["Spadone",2,6,0,0,0],["Lancia",1,6,1,8,0],["Bastone ferrato",1,6,1,8,0],["Randello",1,4,0,0,0],["Pugnale",1,4,0,0,1],["Falcetto",1,4,0,0,0],["Giavellotto",1,6,0,0,0],["Dardo",1,4,0,0,1],["Fionda",1,4,0,0,1,"Proiettili"],["Arco corto",1,6,0,0,1,"Frecce"],["Arco lungo",1,8,0,0,1,"Frecce"],["Balestra leggera",1,8,0,0,1,"Quadrelli"]];
+var pO=WP.map(function(p,i){return'<option value="'+i+'">'+p[0]+'</option>'}).join("");
+for(var i=0;i<3;i++)$("weps").insertAdjacentHTML("beforeend",'<div class="wp"><div class="wg"><label class="small mute">Arma<input data-f="w.'+i+'.n" placeholder="Nome"></label><label class="small mute">Scegli dall’elenco<select data-pre="'+i+'"><option value="">—</option>'+pO+'</select></label></div><div class="wg3"><label class="small mute">Caratteristica<select data-f="w.'+i+'.a">'+opts+'</select></label><label class="small mute">N° dadi<input type="number" min="1" max="20" data-f="w.'+i+'.q"></label><label class="small mute">Dado<select data-f="w.'+i+'.s">'+dO+'</select></label></div><div class="wg3"><label class="small mute">Versatile: n°<input type="number" min="1" max="20" data-f="w.'+i+'.vq"></label><label class="small mute">Versatile: dado<select data-f="w.'+i+'.vs">'+vO+'</select></label><label class="small mute">Bonus magico<input type="number" data-f="w.'+i+'.b"></label></div><label class="row small" style="margin:0 0 8px"><input type="checkbox" data-f="w.'+i+'.p">Competente con l’arma</label><label class="row small" style="margin:0 0 8px"><input type="checkbox" data-f="w.'+i+'.am">Usa munizioni</label><div class="amm" id="amb'+i+'" hidden><div class="wg"><label class="small mute">Tipo di munizioni<input data-f="w.'+i+'.mt" placeholder="Frecce"></label><label class="small mute">Rimaste<input type="number" min="0" data-f="w.'+i+'.mu"></label></div><div class="wbtn"><button type="button" class="btn" data-am="'+i+',-1">−1</button><button type="button" class="btn" data-am="'+i+',1">+1</button><button type="button" class="btn" data-am="'+i+',r">Recupera metà</button></div><p class="small mute" id="ams'+i+'" style="margin:6px 0 0"></p></div><div class="wbtn"><button type="button" class="btn p" data-wa="'+i+'" id="wa'+i+'"></button><button type="button" class="btn" data-wd="'+i+'" id="wd'+i+'"></button><button type="button" class="btn" data-wv="'+i+'" id="wv'+i+'"></button></div></div>');
+["Rame","Argento","Electrum","Oro","Platino"].forEach(function(x,i){$("coins").insertAdjacentHTML("beforeend",'<div class="coin"><b class="small">'+x+'</b><button type="button" class="btn" data-cm="'+i+',-10" aria-label="Meno 10 '+x+'">−10</button><button type="button" class="btn" data-cm="'+i+',-1" aria-label="Meno 1 '+x+'">−1</button><input type="number" min="0" data-f="m.'+i+'" aria-label="'+x+'"><button type="button" class="btn" data-cm="'+i+',1" aria-label="Più 1 '+x+'">+1</button><button type="button" class="btn" data-cm="'+i+',10" aria-label="Più 10 '+x+'">+10</button></div>')});
+
+/* eventi */
+function inp(e){var el=e.target,f=el.getAttribute&&el.getAttribute("data-f"),pr=el.getAttribute&&el.getAttribute("data-pre");if(pr!==null&&pr!==undefined){if(e.type==="change"&&el.value!==""){var p=WP[+el.value],w=S.w[+pr];w.n=p[0];w.q=p[1];w.s=p[2];w.vq=p[3];w.vs=p[4];w.a=p[5];w.am=p[6]?1:0;w.mt=p[6]||"";el.value="";save();render()}return}if(!f)return;
+sp(f,el.type==="checkbox"?(el.checked?1:0):el.type==="number"?(el.value===""?"":parseFloat(el.value)):el.value);save();render()}
+document.addEventListener("input",inp);document.addEventListener("change",inp);
+$("res").addEventListener("click",function(){this.hidden=true});
+function findR(id){return resList().filter(function(r){return r.id===id})[0]}
+document.addEventListener("click",function(e){var t=e.target.closest("button");if(!t||t.disabled)return;var g=function(k){return t.getAttribute(k)},id=t.id,c;
+if((c=g("data-rab"))!=null)d20(mod(+c),"Prova di "+AB[+c]);
+else if((c=g("data-rsv"))!=null)d20(mod(+c)+(C().sv.indexOf(+c)>=0?P():0),"TS "+AB[+c]);
+else if((c=g("data-rsk"))!=null)d20(mod(SK[c][1])+($("skc"+c).checked?P():0),SK[c][0]);
+else if((c=g("data-am"))!=null){var ap=c.split(","),aw=S.w[+ap[0]];if(ap[1]==="r"){var bk=Math.floor(n(aw.ms)/2);aw.mu=n(aw.mu)+bk;aw.ms=0;show(aw.n||"Arma","+"+bk,"Munizioni recuperate: metà di quelle usate")}else aw.mu=Math.max(0,n(aw.mu)+(+ap[1]));save();render()}
+else if((c=g("data-wa"))!=null)atk(+c);
+else if((c=g("data-wd"))!=null)dmg(+c,false);
+else if((c=g("data-wv"))!=null)dmg(+c,true);
+else if((c=g("data-slot"))!=null){var k=+c-1,u=n(S.su[k]);S.su[k]=g("data-av")==="1"?u+1:Math.max(0,u-1);save();render()}
+else if((c=g("data-rp"))!=null){var u2=n(S.ru[c]);S.ru[c]=g("data-av")==="1"?u2+1:Math.max(0,u2-1);save();render()}
+else if((c=g("data-ract"))!=null){var r=findR(c);if(!r)return;if(S.ra[c]){S.ra[c]=0;save();render();return}if(n(S.ru[c])>=r.mx){show(r.n,"—","Usi esauriti");return}S.ru[c]=n(S.ru[c])+1;S.ra[c]=1;show(r.n,"✓","Attivo");render()}
+else if((c=g("data-ruse"))!=null){var r2=findR(c);if(!r2||n(S.ru[c])>=r2.mx)return;S.ru[c]=n(S.ru[c])+1;if(c==="tn"){S.dmg=pfMax()-1;show(r2.n,"1 PF","Resti a 1 punto ferita")}else show(r2.n,"✓","Usato");render()}
+else if((c=g("data-rpool"))!=null){var pr2=c.split(","),r3=findR(pr2[0]);if(!r3)return;var el2=$("pn_"+pr2[0]),amt=Math.abs(parseInt(el2&&el2.value))||1,us=n(S.ru[pr2[0]]),lf=r3.mx-us;
+if(pr2[1]==="v")amt=5;if(pr2[1]==="r"){S.ru[pr2[0]]=Math.max(0,us-amt)}else{if(amt>lf){show(r3.n,"—","Riserva insufficiente");return}S.ru[pr2[0]]=us+amt;show(r3.n,"−"+amt,pr2[1]==="v"?"Cura una malattia o neutralizza un veleno":"Spesi")}render()}
+else if((c=g("data-cs"))!=null){var cs=c.split(","),kk=+cs[1],lf2=resList().filter(function(r){return r.id==="ps"})[0];if(!lf2)return;var pl=lf2.mx-n(S.ru.ps);
+if(cs[0]==="m"){if(pl<SC[kk-1])return;S.ru.ps=n(S.ru.ps)+SC[kk-1];S.bs[kk-1]=n(S.bs[kk-1])+1;show("Slot creato","+1","Slot di livello "+kk+" (−"+SC[kk-1]+" PS)")}
+else{if(n(S.su[kk-1])>=smax(kk-1))return;S.su[kk-1]=n(S.su[kk-1])+1;S.ru.ps=Math.max(0,n(S.ru.ps)-kk);show("Slot convertito","+"+kk+" PS","Slot di livello "+kk)}render()}
+else if((c=g("data-cm"))!=null){var cp=c.split(","),ci2=+cp[0];S.m[ci2]=Math.max(0,n(S.m[ci2])+(+cp[1]));save();render()}
+else if((c=g("data-sm"))!=null)smite(+c);
+else if((c=g("data-xp"))!=null){S.xp=n(S.xp)+(+c);save();render()}
+else if((c=g("data-tab"))!=null){tab=c;derived()}
+else if((c=g("data-mode"))!=null){S.mode=c;save();derived()}
+else if((c=g("data-die"))!=null){if(+c===20)d20(0,"d20");else rollDice(1,+c,0,"d"+c)}
+else if(id==="edid")$("idp").hidden=!$("idp").hidden;
+else if(id==="idok"){S.ok=1;$("idp").hidden=true;save();render()}
+else if(id==="mroll"){var mq=Math.max(1,Math.min(30,parseInt($("mq").value)||1)),ms=+$("ms").value,mm=parseInt($("mm").value)||0;if(mq===1&&ms===20)d20(mm,"d20");else rollDice(mq,ms,mm,mq+"d"+ms)}
+else if(id==="txr"){var ta=Math.abs(parseInt($("txa").value))||0,tu=+$("txu").value;if(ta){S.m[tu]=n(S.m[tu])+ta;$("txa").value="";save();render()}}
+else if(id==="txs"){var sa=Math.abs(parseInt($("txa").value))||0,su=+$("txu").value;if(sa){if(pay(sa,su)){$("txa").value="";save();render()}else{derived();$("mtot").textContent="Monete insufficienti per questo pagamento."}}}
+else if(id==="init")d20(mod(1),"Iniziativa");
+else if(id==="insp"){S.insp=S.insp?0:1;save();derived()}
+else if(id==="theme"){var cur=S.theme||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");S.theme=cur==="dark"?"light":"dark";save();derived()}
+else if(id==="shield"){S.scudo=S.scudo?0:1;save();render()}
+else if(id==="hp-"||id==="hp+"){S.dmg=Math.max(0,Math.min(pfMax(),n(S.dmg)+(id==="hp+"?-1:1)));save();derived()}
+else if(id==="dmg"){var v=Math.abs(parseInt($("hpd").value))||0,tp=Math.min(n(S.pft),v);S.pft=n(S.pft)-tp;v-=tp;S.dmg=Math.min(pfMax(),n(S.dmg)+v);$("hpd").value="";save();render()}
+else if(id==="heal"){var v2=Math.abs(parseInt($("hpd").value))||0;S.dmg=Math.max(0,n(S.dmg)-v2);$("hpd").value="";save();render()}
+else if(id==="sr"){if(L()-n(S.hdu)<=0){show("Riposo breve","—","Nessun dado vita rimasto");return}var hd=C().hd,rr=d(hd),h=Math.max(1,rr+mod(2));S.hdu=n(S.hdu)+1;S.dmg=Math.max(0,n(S.dmg)-h);resList().forEach(function(x){if(x.rest==="b")delete S.ru[x.id]});S.ra={};show("Riposo breve (1d"+hd+" "+sg(mod(2))+")","+"+h+" PF","["+rr+"] · risorse da riposo breve ripristinate");render()}
+else if(id==="lr"){S.dmg=0;S.pft=0;S.hdu=Math.max(0,n(S.hdu)-Math.max(1,Math.floor(L()/2)));S.ru={};S.ra={};S.su=[0,0,0,0,0,0,0,0,0];S.bs=[0,0,0,0,0,0,0,0,0];show("Riposo lungo","✓","PF, slot e risorse ripristinati; metà dei dadi vita recuperati");render()}
+else if(id==="xpa"){S.xp=n(S.xp)+Math.abs(parseInt($("xpi").value)||0);$("xpi").value="";save();render()}
+else if(id==="xps"){if($("xpi").value!==""){S.xp=Math.abs(parseInt($("xpi").value)||0);$("xpi").value="";save();render()}}
+else if(id==="lvup"){var nl=L()+1,cc=C(),fs=cc.f.filter(function(f){return f[0]===nl}).map(function(f){return f[1]}).join(", ")||"nessun nuovo privilegio descritto",sl2=slotsFor(nl),ss=sl2.length?sl2.map(function(x,i){return x+" di livello "+(i+1)}).join(", "):"nessuno";
+$("lvtxt").textContent="Livello "+nl+": PF massimi +"+(Math.floor(cc.hd/2)+1+mod(2)+(R().hpl||0))+" (media d"+cc.hd+", COS"+(R().hpl?", razza":"")+"). Competenza "+sg(2+Math.floor((nl-1)/4))+". Nuovi privilegi: "+fs+". Slot: "+ss+".";$("lvpanel").hidden=false}
+else if(id==="lvno")$("lvpanel").hidden=true;
+else if(id==="lvok"){S.liv=L()+1;$("lvpanel").hidden=true;save();render()}
+else if(id==="clr"){S.hist=[];save();hist()}
+else if(id==="reset"){if(armed){S=cl(DEF);armed=false;save();render();$("idp").hidden=false}else{armed=true;derived();setTimeout(function(){armed=false;derived()},4000)}}
+});
+
+render();
+if(!S.ok)$("idp").hidden=false;
+if(window.IntersectionObserver)new IntersectionObserver(function(en){vis=en[0].isIntersecting},{threshold:.2}).observe($("dicecard"));
+
+/* ponte verso Firebase: lo usa lo script di accesso qui sotto */
+window.SCHEDA={
+attach:function(r,data){ref=r;dirty=false;
+if(data&&data.json){try{S=mg(JSON.parse(data.json))}catch(e){S=cl(DEF)}$("sv").textContent="✓ Sincronizzato"}
+else{S=cl(DEF);r.set({json:JSON.stringify(S)}).then(function(){$("sv").textContent="✓ Salvato"}).catch(function(){$("sv").textContent="Errore di salvataggio"})}
+try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+render();$("idp").hidden=!!S.ok},
+detach:function(){ref=null;try{localStorage.removeItem(KEY)}catch(e){}}};
+})();
+</script>
+<script>
+/* Service worker: indipendente da Firebase, così si registra sempre */
+if("serviceWorker" in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})});
+</script>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+import{getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,sendEmailVerification,sendPasswordResetEmail,signOut,setPersistence,browserLocalPersistence,browserSessionPersistence}from"https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+import{getFirestore,initializeFirestore,persistentLocalCache,persistentMultipleTabManager,doc,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+
+/* ====== Configurazione del progetto Firebase ====== */
+const firebaseConfig={
+  apiKey:"AIzaSyCblZqYVqC-0wSzAIi3oCS14Ghe4SIZQSw",
+  authDomain:"schede-campagna-dd.firebaseapp.com",
+  projectId:"schede-campagna-dd",
+  storageBucket:"schede-campagna-dd.firebasestorage.app",
+  messagingSenderId:"792628196060",
+  appId:"1:792628196060:web:6f66ac2ca11e2e7752fa19"
+};
+
+const $=i=>document.getElementById(i);
+const EYE='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+const EYEOFF='<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 19c-7 0-11-7-11-7a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><path d="M1 1l22 22"/></svg>';
+let mode="login";
+function msg(t,ok){const m=$("amsg");m.textContent=t||"";m.style.color=ok?"var(--grn)":"var(--red)"}
+const ERR={
+"auth/invalid-credential":"Email o password non corretti.","auth/wrong-password":"Email o password non corretti.","auth/user-not-found":"Email o password non corretti.",
+"auth/invalid-email":"L’indirizzo email non è valido.","auth/email-already-in-use":"Questa email è già registrata: passa a «Accedi».",
+"auth/weak-password":"La password è troppo debole.","auth/too-many-requests":"Troppi tentativi: riprova tra qualche minuto.",
+"auth/missing-password":"Inserisci la password.","auth/unauthorized-domain":"Questo indirizzo del sito non è autorizzato in Firebase: aggiungilo in Authentication → Impostazioni → Domini autorizzati.",
+"auth/operation-not-allowed":"Questo metodo di accesso non è attivo nel progetto Firebase.",
+"auth/network-request-failed":"Connessione assente."};
+function err(e){msg(ERR[e.code]||("Errore: "+(e.code||e.message)),false)}
+const em=()=>$("aem").value.trim().toLowerCase(),pw=()=>$("apw").value;
+const crit=p=>({len:p.length>=8,up:/[A-Z]/.test(p),lo:/[a-z]/.test(p),num:/\d/.test(p),same:p.length>0&&p===$("apw2").value});
+const critOk=()=>Object.values(crit(pw())).every(Boolean);
+function updCrit(){if(mode!=="reg"){$("asubmit").disabled=false;return}
+const c=crit(pw());document.querySelectorAll("#crit li").forEach(li=>li.classList.toggle("ok",!!c[li.dataset.c]));
+$("asubmit").disabled=!critOk()||!em()}
+function setMode(m){mode=m;const r=m==="reg";
+$("tlogin").setAttribute("aria-selected",String(!r));$("treg").setAttribute("aria-selected",String(r));
+$("ahead").textContent=r?"Crea un nuovo account":"Accedi al tuo account";
+$("asub").textContent=r?"Usa la stessa email con cui sei stato invitato. Riceverai un messaggio per confermarla. Per entrare, la tua email deve essere stata aggiunta alla lista degli invitati.":"Inserisci l’email e la password del tuo account.";
+$("asubmit").textContent=r?"Crea account":"Accedi";
+$("aswitch").textContent=r?"Hai già un account? Accedi":"Non hai un account? Registrati";
+$("regbox").hidden=!r;$("areset").hidden=r;$("rembox").hidden=r;
+$("apw").autocomplete=r?"new-password":"current-password";
+msg("");updCrit()}
+document.querySelectorAll("[data-eye]").forEach(b=>{b.innerHTML=EYE;b.setAttribute("aria-label","Mostra la password");b.setAttribute("aria-pressed","false");
+b.onclick=()=>{const i=$(b.dataset.eye),show=i.type==="password";i.type=show?"text":"password";b.innerHTML=show?EYEOFF:EYE;b.setAttribute("aria-label",show?"Nascondi la password":"Mostra la password");b.setAttribute("aria-pressed",String(show))}});
+$("tlogin").onclick=()=>setMode("login");$("treg").onclick=()=>setMode("reg");
+$("aswitch").onclick=()=>setMode(mode==="reg"?"login":"reg");
+["aem","apw","apw2"].forEach(i=>{$(i).addEventListener("input",updCrit);$(i).addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("asubmit").click()}})});
+setMode("login");
+try{const se=localStorage.getItem("scheda-email");if(se)$("aem").value=se}catch(e){}
+
+if(firebaseConfig.apiKey==="INCOLLA_QUI"){msg("Configurazione Firebase mancante.",false)}
+else{
+const app=initializeApp(firebaseConfig),auth=getAuth(app);let db;try{db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})})}catch(e){db=getFirestore(app)}
+$("asubmit").onclick=async()=>{msg("");
+if(!em()){msg("Inserisci la tua email.",false);return}
+if(mode==="login"){if(!pw()){msg("Inserisci la password.",false);return}const rem=$("arem").checked;try{rem?localStorage.setItem("scheda-email",em()):localStorage.removeItem("scheda-email")}catch(e){}
+try{await setPersistence(auth,rem?browserLocalPersistence:browserSessionPersistence);await signInWithEmailAndPassword(auth,em(),pw())}catch(e){err(e)}return}
+if(!critOk()){msg("La password non rispetta tutti i criteri indicati.",false);return}
+try{await setPersistence(auth,browserLocalPersistence);const x=await createUserWithEmailAndPassword(auth,em(),pw());await sendEmailVerification(x.user)}catch(e){err(e)}};
+$("areset").onclick=async()=>{if(!em()){msg("Scrivi prima la tua email.",false);return}try{await sendPasswordResetEmail(auth,em());msg("Ti abbiamo inviato un’email per reimpostare la password.",true)}catch(e){err(e)}};
+$("aresend").onclick=async()=>{try{await sendEmailVerification(auth.currentUser);msg("Email di conferma inviata di nuovo.",true)}catch(e){err(e)}};
+$("adone").onclick=async()=>{try{await auth.currentUser.reload();await auth.currentUser.getIdToken(true);location.reload()}catch(e){err(e)}};
+const out=async()=>{await signOut(auth);window.SCHEDA.detach();location.reload()};
+$("aout").onclick=out;$("logout").onclick=out;
+const wait=on=>{$("aform").hidden=on;["aresend","aout","adone"].forEach(i=>$(i).hidden=!on)};
+onAuthStateChanged(auth,async u=>{
+  wait(false);["aresend","aout","adone"].forEach(i=>$(i).hidden=true);
+  if(!u){document.body.classList.add("locked");return}
+  if(!u.emailVerified){document.body.classList.add("locked");wait(true);
+    msg("Account creato. Ti abbiamo inviato un’email a "+u.email+": aprila, tocca il link di conferma e poi premi «Ho confermato l’email». Controlla anche la cartella spam.",true);return}
+  try{
+    const r=doc(db,"schede",u.uid),s=await getDoc(r);
+    window.SCHEDA.attach({set:o=>setDoc(r,o)},s.exists()?s.data():null);
+    $("who").textContent="Collegato come "+u.email;
+    document.body.classList.remove("locked");msg("");
+  }catch(e){
+    document.body.classList.add("locked");wait(true);$("aresend").hidden=true;$("adone").hidden=true;
+    msg(e.code==="permission-denied"
+      ?"Sei collegato come "+u.email+", ma questa email non risulta tra gli invitati. Nella raccolta «invitati» deve esistere un documento con questo ID esatto, in minuscolo: "+String(u.email).toLowerCase()
+      :e.code==="unavailable"?"Sei offline e questa scheda non è ancora salvata su questo dispositivo: collegati a internet almeno una volta.":"Errore di collegamento: "+(e.code||e.message),false);
+  }
+});
+}
+</script>
+</body>
+</html>
